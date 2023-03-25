@@ -6,7 +6,7 @@ This repository shows a minimal working example of how to set up an extensible a
 
 Because often you need flexibility in some of a DAG's parameters to deal with finicky external factors environment. It's not uncommon that  something goes awry and you need a hotfix to change some simple DAG parameters---but if your organization's deployment pipeline is slow or clunky it can be really painful to make that hotfix.
 
-Variables look like they're *exactly* what you need---perfect! You start using them. Fast-foward a few months and egad everyone on your team is sticking them everywhere willy nilly, and naming them inconsistently and polluting the global scope. Welcome to software: your solution now needs solution.
+Variables look like they're *exactly* what you need---perfect. You start using them. But fast-foward a few months and egad! everyone on your team is sticking them anywhere willy nilly, and naming them inconsistently and polluting the global scope and it's a quagmire for no reason. Welcome to software: your solution now needs solution.
 
 ## What
 
@@ -15,6 +15,8 @@ This repo has an example `VariableOverrideOperator` class that's an example of h
    - each DAG has 1 (`dict`) variable, named exactly after its `dag_id`
    - each DAG's tasks have 1 nested `dict` entry in the DAG `dict` variable, keyed by `task_id`
 - rolling out a `pre_execute()` method on the `VariableOverrideOperator` that retrieves the DAG's variable and dynamically overrides the operator's attributes with any corresponding values from the variable
+
+It should go without saying, but I'll say it anyway: you need to be *judicious* when choosing what's appropriate to override at runtime like this. This is a tool to systematize something that's helpful when done for the right reasons by a conscientious operator, and is not a good idea for all situations.
 
 ## Example
 
@@ -26,6 +28,6 @@ We can modify its runtime behaviour by creating and editing a variable with keys
 
 ## How
 
-Just a few simple lines, nothing fancy:
+Just a few lines to get the variable and call `setattr)`, nothing fancy:
 
-https://github.com/mbhynes/airflow-operator-vars/blob/main/varops/operators/base.py#L63-L90
+https://github.com/mbhynes/airflow-operator-vars/blob/b771c21bd7bde448b25ce4051fdd3287096b55d3/varops/operators/base.py#L63-L90
