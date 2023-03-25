@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+SCRIPT_NAME=$(basename $0)
+
+log() {
+  echo "$SCRIPT_NAME: $(date): INFO: $*" 1>&2
+}
+error() {
+  echo "$SCRIPT_NAME: $(date): ERROR: $*" 1>&2
+}
+die() {
+  error "$*"
+  exit 1
+}
+
+check_requires() {
+  log "Running $SCRIPT_NAME with env:"
+  for r in $@; do
+    if ! printenv "$r" > /dev/null; then
+      die "Could not find required env var: '$r'"
+    fi
+    echo "   $r=$(printenv $r)" 1>&2
+  done
+}
+
+export_env() {
+  export ROOT_DIR=$(dirname $SCRIPT_NAME)
+  PKG_DIR="$ROOT_DIR/airflow"
+  mkdir -p "$PKG_DIR" "$PKG_DIR/config" "$PKG_DIR/dags"  
+  export PKG_DIR="$(realpath "$PKG_DIR")"
+  export AIRFLOW_HOME="$(realpath "$PKG_DIR/config")"
+  export AIRFLOW__CORE__DAGS_FOLDER="$(realpath "$PKG_DIR/dags")"
+
+
+  export AIRFLOW_VERSION="2.4.3"
+
+  if [ -r "$ROOT_DIR/.env" ]; then
+    log "Reading contents of private $ROOT_DIR/.env ..."
+    source "$ROOT_DIR/.env"
+  fi
+}
+
+run() {
+  if [ -z "$1" ] || [[ "$1" == 'help' ]]; then
+    echo "$SCRIPT_NAME subcommands: $(ls $ROOT_DIR/bin/dev-* | xargs basename | sed -r -e 's/^dev-//' | tr '\n' ' ')"
+  else
+    script="$ROOT_DIR/bin/dev-$1"
+    if [ -x "$script" ]; then
+      shift
+      "$script" $*
+    else
+      die "Provided subcommand: '$1' is not valid; no executable script $script"
+    fi
+  fi
+  return $?
+}
+
+# Only run & exit if this script is called directly; run & exit will
+# not be called if dev is being sourced with '.' or 'source'
+if [ "${BASH_SOURCE[0]}" -ef "$0" ]; then
+  export_env
+  run $*
+  exit $?
+fi

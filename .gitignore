@@ -1,0 +1,6 @@
+airflow/config/*
+*.swp
+*.swo
+*.pyc
+*/__pycache__/*
+.venv/*

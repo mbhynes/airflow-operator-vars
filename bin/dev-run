@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../dev
+
+REQUIRES=('ROOT_DIR' 'AIRFLOW_HOME')
+check_requires ${REQUIRES[@]}
+
+source $ROOT_DIR/.venv/bin/activate || die "Failed to activate virtualenv"
+
+airflow scheduler &
+airflow webserver --port 8080

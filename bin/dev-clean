@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../dev
+
+REQUIRES=('ROOT_DIR' 'AIRFLOW_HOME')
+check_requires ${REQUIRES[@]}
+
+[ -d "$ROOT_DIR/.venv" ] && rm -r "$ROOT_DIR/.venv"
+[ -d "$AIRFLOW_HOME" ] && rm -r "$AIRFLOW_HOME"

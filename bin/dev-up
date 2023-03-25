@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../dev
+
+REQUIRES=('ROOT_DIR' 'AIRFLOW_HOME' 'AIRFLOW_VERSION')
+check_requires ${REQUIRES[@]}
+
+install_airflow() {
+  log "Installing airflow ${AIRFLOW_VERSION} to ${AIRFLOW_HOME}..."
+  python_version="$(python --version | cut -d " " -f 2 | cut -d "." -f 1-2)"
+  constraint_url="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${python_version}.txt"
+
+  pip install "apache-airflow==${AIRFLOW_VERSION}" --constraint "${constraint_url}"
+
+  airflow db init 
+
+  airflow users create \
+    --username admin \
+    --password admin \
+    --firstname admin \
+    --lastname admin \
+    --role Admin \
+    --email admin@local.host
+}
+
+which realpath >/dev/null || die "realpath is not installed; please install this first."
+
+python3 -m venv .venv
+source $ROOT_DIR/.venv/bin/activate || die "Failed to activate virtualenv"
+install_airflow || die "Failed to install airflow"
