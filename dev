@@ -25,12 +25,10 @@ check_requires() {
 
 export_env() {
   export ROOT_DIR=$(dirname $SCRIPT_NAME)
-  PKG_DIR="$ROOT_DIR/varops"
-  mkdir -p "$PKG_DIR" "$PKG_DIR/config" "$PKG_DIR/dags"  
-  export PKG_DIR="$(realpath "$PKG_DIR")"
-  export AIRFLOW_HOME="$(realpath "$PKG_DIR/config")"
-  export AIRFLOW__CORE__DAGS_FOLDER="$(realpath "$PKG_DIR/dags")"
-
+  AIRFLOW_HOME="$ROOT_DIR/airflow"
+  mkdir -p "$AIRFLOW_HOME"
+  export AIRFLOW_HOME="$(realpath "$AIRFLOW_HOME")"
+  export AIRFLOW__CORE__DAGS_FOLDER="$(realpath "$ROOT_DIR/dags")"
 
   export AIRFLOW_VERSION="2.4.3"
 
