@@ -7,4 +7,4 @@ check_requires ${REQUIRES[@]}
 
 source $ROOT_DIR/.venv/bin/activate || die "Failed to activate virtualenv"
 
-PYTHONPATH=$ROOT_DIR airflow scheduler
+PYTHONPATH=$ROOT_DIR airflow webserver --port 8080
