@@ -1,7 +1,7 @@
 import json
 
 from airflow.models.baseoperator import BaseOperator
-from airflow.variable import Variable
+from airflow.models import Variable
 
 
 class VariableOverrideOperator(BaseOperator):
@@ -55,10 +55,6 @@ class VariableOverrideOperator(BaseOperator):
     override_var = None
     override_attrs = None
     override_callables = None
-
-    def __init__(self, name: str, **kwargs) -> None:
-        super().__init__(**kwargs)
-        self.name = name
 
     def pre_execute(self, context):
         """
