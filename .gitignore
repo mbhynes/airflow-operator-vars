@@ -1,4 +1,4 @@
-airflow/config/*
+varops/config/*
 *.swp
 *.swo
 *.pyc

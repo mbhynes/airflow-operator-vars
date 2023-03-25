@@ -25,7 +25,7 @@ check_requires() {
 
 export_env() {
   export ROOT_DIR=$(dirname $SCRIPT_NAME)
-  PKG_DIR="$ROOT_DIR/airflow"
+  PKG_DIR="$ROOT_DIR/varops"
   mkdir -p "$PKG_DIR" "$PKG_DIR/config" "$PKG_DIR/dags"  
   export PKG_DIR="$(realpath "$PKG_DIR")"
   export AIRFLOW_HOME="$(realpath "$PKG_DIR/config")"
